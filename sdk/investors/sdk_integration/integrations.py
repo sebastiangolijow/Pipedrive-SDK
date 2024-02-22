@@ -349,9 +349,10 @@ class PipedriveInvestorIntegration(CoreToPipedriveIntegration):
     @classmethod
     def perform_action(cls, investor: Investor, user: CustomUser) -> None:
         """Create entities Organization from investor and contact from User"""
-        _, org_id = cls.get_or_create_organization(investor)
+        response, org_id = cls.get_or_create_organization(investor)
         _, person_id = cls.get_or_create_contact(user, investor, org_id)
-        cls.create_lead(investor, org_id, person_id)
+        if "CREATED" in response:
+            cls.create_lead(investor, org_id, person_id)
 
     @classmethod
     def create_lead(cls, investor: Investor, org_id, person_id) -> None:
